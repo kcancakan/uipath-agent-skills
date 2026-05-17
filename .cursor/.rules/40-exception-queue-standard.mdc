@@ -1,0 +1,128 @@
+---
+description: Exception handling and queue transaction rules for company UiPath projects
+alwaysApply: true
+---
+
+Exception Handling Rules
+Business vs System Exception
+
+System exceptions and Business Exceptions must be separated correctly.
+
+Expected business/data validation outcomes should usually be BusinessRuleException.
+
+Infrastructure issues, unavailable services, timeouts, unknown technical failures, dependency failures, and unexpected runtime errors should usually be SystemException or generic Exception handled as SystemException by the framework.
+
+If retry behavior depends on this classification, unclear classification should be flagged as Warning.
+
+Flag as Critical only if there is strong evidence that the wrong exception type will cause duplicate processing, skipped business handling, unrecoverable queue state, or repeated false retries.
+
+BusinessException Catch Requirement
+
+If a workflow throws a BusinessException or BusinessRuleException, the outer TryCatch should contain a BusinessException/BusinessRuleException catch block where applicable.
+
+Flag as Critical if BusinessException is thrown but only generic Exception is caught and this changes retry/status behavior.
+
+Flag as Warning if the catch structure is unclear or framework-specific.
+
+Catch Order
+
+When both BusinessRuleException and generic Exception are caught in the same TryCatch, verify catch order.
+
+BusinessRuleException should normally be handled before generic Exception if the runtime uses first-matching catch behavior.
+
+Flag as Warning if static review suggests potential catch-order ambiguity.
+
+Flag as Critical only after runtime/analyzer evidence confirms incorrect catch behavior.
+
+Catch Blocks
+
+Catch blocks must log the exception and then throw/rethrow unless there is a documented exceptional case.
+
+Flag as Critical if a catch block swallows the exception.
+
+Flag as Warning if exception logs do not include enough context.
+
+Process Catch Output Array Assignment
+
+In Process workflows, BusinessRuleException and SystemException catch blocks must assign output array values before other catch handling logic.
+
+If the output array value can arrive as null or empty, it must still be explicitly initialized or assigned in the catch block.
+
+Flag as Warning if BusinessRuleException/SystemException catch blocks do not clearly assign the required output array.
+
+Flag as Critical if missing output array assignment can break downstream framework handling, reporting, transaction status update, or exception notification.
+
+Output Array Initialization
+
+Variables used in output arrays must be initialized before usage.
+
+For string-based output values, initialize with:
+
+String.Empty
+
+or an equivalent empty/default value before population.
+
+Flag as Warning if output array variables may be null.
+
+Flag as Critical if null output array values can break framework-level exception handling or reporting.
+
+Queue Item Reference
+
+Add Queue Item activities should include a reference.
+
+Flag as Critical if reference is missing and duplicate prevention/idempotency depends on queue references.
+
+Flag as Warning if reference exists but is weak or not business-unique.
+
+Add Queue Item Row Count Check
+
+Before Add Queue Item or Bulk Add Queue Item operations, the source DataTable must be checked with dt.Rows.Count > 0 or equivalent.
+
+Flag as Warning if Add Queue Item is executed without a visible row count check.
+
+Flag as Critical if missing row count validation can create empty queue items, invalid dispatcher output, or downstream performer failures.
+
+Example:
+
+If dt_Transactions.Rows.Count > 0
+  Then: Add Queue Item / Bulk Add Queue Items
+  Else: Log no transactions found
+Add Queue Item Activity
+
+Add Queue Item operations should use the Trendyol activity when required by company standard.
+
+Flag as Critical if standard Trendyol queue activity is bypassed in a production dispatcher and this can break downstream queue handling.
+
+Flag as Warning if the usage is inconsistent or unclear.
+
+Transaction Item Empty Check
+
+In Process workflows, Transaction Item Empty Check activity should be placed after queue items are retrieved.
+
+Flag as Critical if empty transaction handling can break the process.
+
+Flag as Warning if placement is inconsistent with the framework pattern.
+
+Retry and Idempotency
+
+Review retry behavior for duplicate business action risk.
+
+Flag as Critical if a retry can duplicate irreversible actions such as sending mail, submitting forms, creating tickets, adding queue items, posting records, moving files, or updating a database without idempotency.
+
+Flag as Warning if retry behavior is unclear.
+
+If business logic or PDD is required to classify the risk, place the item under Manual Check.
+
+## UiPath TryCatch Catch Matching
+
+Do not assume that UiPath TryCatch behaves exactly like C# catch ordering.
+
+In UiPath workflows, BusinessRuleException may still be caught by its specific catch block even if a generic System.Exception catch appears earlier in the XAML order.
+
+Do not flag catch order as Critical unless runtime validation, Workflow Analyzer output, or observed behavior proves that the BusinessRuleException is being caught by the generic Exception block.
+
+If catch order looks suspicious from static XAML only, classify it as Manual Check or Suggestion, not Critical.
+
+Recommended wording:
+- “Verify catch behavior in Studio/runtime.”
+- “Do not assume generic catch will shadow BusinessRuleException without evidence.”

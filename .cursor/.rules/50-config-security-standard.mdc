@@ -1,0 +1,49 @@
+---
+description: Config, asset, static value, and security rules for company UiPath projects
+alwaysApply: true
+---
+
+Config and Security Rules
+No Static Values
+
+Static file paths, URLs, mail recipients, mail sender info, API endpoints, environment-specific values, and credentials should not be hardcoded in workflows.
+
+They should be stored in Config, Orchestrator Assets, secure credential stores, or approved environment configuration.
+
+Flag as Critical for hardcoded credentials, tokens, secrets, or production credentials.
+
+Flag as Warning for hardcoded paths, URLs, recipients, and environment-specific values.
+
+Template Text Files
+
+If the process reads a template .txt file, it should be read once during project initialization and reused later.
+
+It should not be repeatedly read inside the Process loop unless there is a documented reason.
+
+Flag as Warning if template files are repeatedly read during transaction processing.
+
+LINQ Nullable Checks
+
+When LINQ is used, nullable checks should be performed before accessing potentially null values.
+
+Flag as Critical if LINQ can cause runtime NullReferenceException in production.
+
+Flag as Warning if nullable handling is unclear.
+
+Secrets and Credentials
+
+Passwords, tokens, and secrets should not be passed around as plain String unless the platform, package, or legacy dependency requires it and the exposure is controlled.
+
+Prefer:
+
+Orchestrator Credential assets
+SecureString patterns
+Integrated authentication
+Secret stores
+Excluded logged data configuration
+
+Flag as Critical if secrets can be logged, committed, exposed in exception messages, or stored in plain text.
+
+Flag as Warning if secrets flow as plain String but there is no evidence of logging or exposure.
+
+Flag as Manual Check if the repository does not show whether values come from secure assets.

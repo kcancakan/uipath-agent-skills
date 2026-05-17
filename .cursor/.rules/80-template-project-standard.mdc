@@ -1,0 +1,30 @@
+---
+description: Special behavior for reviewing UiPath framework or template repositories
+alwaysApply: true
+---
+
+Template Project Behavior
+
+If the repository is a framework/template repository:
+
+Allow placeholder workflows.
+Allow generic reusable components.
+Reduce strictness for business-flow completeness.
+Do not require business-specific PDD alignment.
+Focus on framework consistency, extension points, naming clarity, safe defaults, and template usability.
+Do not flag the project name as Critical just because it does not follow business process naming.
+Do not flag missing .gitlab-ci.yml as Critical unless template repositories are expected to include it or there is evidence of broken CI.
+Treat generic dependencies as Warning or Manual Check unless they create confirmed security or compatibility risk.
+
+Template review should prioritize:
+
+Can a new process be safely created from this template?
+Are framework extension points clear?
+Are default exception, logging, queue, and config patterns safe?
+Are sample workflows and comments useful?
+Are there misleading names, duplicated classes, or stale metadata?
+Are optional packages documented?
+
+If the repository is a real production project, use the normal production rules.
+
+If unclear whether it is a template or production project, infer from project metadata such as isTemplate, README, project name, and folder structure, then state confidence.

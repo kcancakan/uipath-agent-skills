@@ -1,0 +1,68 @@
+---
+description: Evidence-based severity and false-positive reduction rules
+alwaysApply: true
+---
+
+Evidence-Based Severity
+
+Never classify an issue as Critical based only on static suspicion.
+
+Critical requires at least one of:
+
+confirmed production failure risk
+confirmed CI/CD failure
+confirmed data loss risk
+confirmed duplicate transaction risk
+confirmed security exposure
+exception swallowing
+missing transaction traceability
+broken queue status handling
+irreversible side effect without idempotency
+runtime/build/analyzer evidence
+
+If the issue is plausible but unconfirmed, classify it as Warning or Manual Check.
+
+Known-Working Pipeline Assumption
+
+If the user or repository context indicates that the project builds/deploys successfully in the company pipeline:
+
+Do not claim that CI/CD will fail.
+Do not mark dependency or project.json concerns as Critical unless direct evidence proves failure.
+Reword such findings as dependency hygiene, portability, clean-machine reproducibility, or onboarding clarity risks.
+Manual Check Usage
+
+Use Manual Check when validation requires:
+
+UiPath Studio runtime
+Workflow Analyzer output
+Orchestrator environment
+CI/CD pipeline logs
+PDD/business rules
+Live application selectors
+Production config/assets
+Queue runtime behavior
+Credential asset configuration
+Confidence Rules
+
+Use High confidence only when evidence is directly visible in repository files.
+
+Use Medium confidence when evidence is visible but interpretation depends on framework/company context.
+
+Use Low confidence when the finding is plausible but requires external validation.
+
+Avoid Alarmist Language
+
+Avoid phrases like:
+
+will break CI/CD
+will fail in production
+causes deployment failure
+
+unless direct evidence proves it.
+
+Prefer:
+
+may reduce clean-machine reproducibility
+should be verified in CI
+requires validation against company pipeline
+may increase support risk

@@ -1,0 +1,104 @@
+---
+description: Variable, argument, activity, and workflow naming rules for company UiPath projects
+alwaysApply: true
+---
+
+Naming Rules
+Variable Naming
+
+Variable names should follow:
+
+DataType_VariableName
+
+The variable name part should be PascalCase.
+
+Examples:
+
+str_MyName
+int_Counter
+arr_Days
+dt_InvoiceData
+bool_IsValid
+
+Flag as Warning if variable names do not follow the convention.
+
+Argument Naming
+
+Argument names should follow:
+
+Direction_DataType_VariableName
+
+The variable name part should be PascalCase.
+
+Examples:
+
+in_str_MyName
+out_int_Counter
+io_arr_Days
+in_dt_InvoiceData
+out_bool_IsValid
+
+Flag as Warning if argument names do not follow the convention.
+
+Argument Name and Direction Consistency
+
+Argument names must match their actual UiPath argument direction.
+
+Naming convention:
+
+in_DataType_Name   -> Direction must be In
+out_DataType_Name  -> Direction must be Out
+io_DataType_Name   -> Direction must be In/Out
+
+Flag as Warning if an argument name prefix does not match the configured argument direction.
+
+Examples of bad practice:
+
+Argument name: in_str_Result
+Direction: Out
+Argument name: out_dt_Data
+Direction: In
+
+Correct examples:
+
+in_str_InvoiceNumber  -> In
+out_arr_Result        -> Out
+io_dt_TransactionData -> In/Out
+
+Flag as Critical only if wrong direction/name mismatch can cause workflow invocation errors, missing output values, or incorrect data propagation.
+
+Activity Naming
+
+Activities should be uniquely and descriptively named.
+
+Good examples:
+
+Throw - SE service request failed
+Assign - Default values
+Log Message - Transaction started
+Add Queue Item - Add invoice transaction
+
+Bad examples:
+
+Assign
+Log Message
+Sequence
+Throw
+
+Flag as Warning if activities have default or duplicate names.
+
+Flag as Suggestion if names are understandable but can be improved.
+
+Workflow Variable Uniqueness
+
+Variable names should be unique within a workflow, even across nested scopes.
+
+Flag as Warning if the same variable name is reused in lower scopes.
+
+File and Class Name Consistency
+
+For XAML workflows, the file name and root x:Class should be consistent where applicable.
+
+Flag as Warning if the file name and x:Class clearly describe different workflow purposes.
+
+Flag as Critical only if the mismatch causes invoke/build/runtime errors or duplicated class identity.

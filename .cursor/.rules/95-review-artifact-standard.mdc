@@ -1,0 +1,94 @@
+---
+description: Review artifact output rules for UiPath RPA review agent
+alwaysApply: true
+---
+
+Review Artifact Rules
+
+When performing a full project review, write the review result into:
+
+.review/rpa-review-result.md
+
+If the .review folder does not exist, create it.
+
+The chat response should only include:
+
+a short summary
+the path of the generated review file
+the number of findings by severity
+Review Result File Format
+
+The review result file must include:
+
+Metadata
+Review date:
+Project name:
+Review type: Full / Partial / Focused
+Reviewer: Cursor RPA Review Agent
+Ruleset version:
+Review confidence: High / Medium / Low
+Executive Summary
+Overall risk:
+Production readiness:
+Main concern:
+Findings
+
+For each finding:
+
+Finding ID
+
+Use this format:
+
+RPA-REV-001
+RPA-REV-002
+RPA-REV-003
+
+Each finding must include:
+
+Severity: Critical / Warning / Suggestion / Manual Check
+Status: Open
+Rule:
+File / Workflow:
+Evidence:
+Why it matters:
+Suggested fix:
+Fix eligibility: Auto-fixable / Semi-auto-fixable / Manual-only
+Fix risk: Low / Medium / High
+Confidence: High / Medium / Low
+Manual Checks
+
+List items that require Studio, Orchestrator, CI/CD, PDD, Workflow Analyzer, or runtime validation.
+
+Recommended Next Actions
+
+List prioritized next actions.
+
+Fix Agent Compatibility
+
+Write findings in a way that a future fix agent can consume.
+
+For every finding:
+
+Be specific about the target file.
+Avoid vague suggested fixes.
+Mark whether the finding is safe for auto-fix.
+Mark the fix risk.
+Do not recommend auto-fix for business logic, exception classification, credentials, Orchestrator assets, queue retry semantics, or irreversible side effects unless the user explicitly approves.
+Use stable Finding IDs.
+JSON Optional Output
+
+If explicitly asked, also create:
+
+.review/rpa-review-result.json
+
+The JSON should contain:
+
+{
+  "metadata": {},
+  "executiveSummary": {},
+  "findings": [],
+  "manualChecks": [],
+  "recommendedNextActions": []
+}
+
+Do not create JSON unless asked.

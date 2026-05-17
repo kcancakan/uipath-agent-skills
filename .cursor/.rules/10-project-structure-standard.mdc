@@ -1,0 +1,83 @@
+---
+description: Company project structure and framework rules for UiPath projects
+alwaysApply: true
+---
+
+Project Structure Rules
+Project Naming
+
+Project names should follow this format for business process repositories:
+
+RPA000_DomainName_ProjectName
+
+Example:
+
+RPA001_Finance_FaturaKontrol
+
+Flag as Warning if the project name does not match this structure.
+
+Do not flag template/framework repositories as Critical only because they do not follow the business process naming format.
+
+Flag as Critical only if the naming mismatch directly breaks deployment, package identity, Orchestrator mapping, or company inventory integration.
+
+Framework
+
+The project should use Rocky Framework for applicable transactional RPA processes.
+
+Check for expected framework structure, standard entry points, transaction handling, config usage, Init / Process / End Process separation, and reusable workflow structure.
+
+Flag as Critical if Rocky Framework is absent in a production-intended transactional process where the company standard requires it.
+
+Flag as Warning if Rocky Framework exists but is inconsistently applied.
+
+Folder Structure
+
+Workflows should be organized into meaningful folders such as:
+
+Init
+Process
+End Process
+Framework
+Common
+Reusable
+
+Rocky Framework projects may use a single Framework folder if the framework itself provides equivalent separation.
+
+Flag as Warning if workflows are placed flat under the project root without clear grouping.
+
+Do not flag as Critical unless folder structure directly creates maintainability, runtime, or deployment risk.
+
+CI/CD File
+
+The project root should contain:
+
+.gitlab-ci.yml
+
+The PROCESS_NAME parameter inside .gitlab-ci.yml should match the project name where applicable.
+
+Important:
+
+Do not assume CI/CD failure only because .gitlab-ci.yml is missing in a local snapshot.
+If the company pipeline is known to work, do not classify CI/CD items as Critical without direct failure evidence.
+Flag as Warning if CI/CD configuration is missing from the repository and this reduces reproducibility or onboarding clarity.
+Flag as Manual Check if CI/CD may be managed outside the repository.
+Flag as Critical only when there is actual evidence of broken pipeline, failed restore/build, missing required pipeline variable, or deployment failure.
+Packages
+
+Unused or unnecessary packages should be removed.
+
+Flag as Warning when package references appear unused.
+
+Flag as Critical only if unnecessary packages introduce confirmed security, compatibility, licensing, or deployment risk.
+
+Dependency Integrity
+
+Do not assume CI/CD failure only because a XAML file contains AssemblyReference or namespace imports that are not visible in project.json.
+
+If the project is known to build and deploy successfully in the company CI/CD pipeline, do not classify this as Critical.
+
+Instead:
+
+Flag as Warning if missing or unclear dependencies reduce portability, clean-machine reproducibility, or onboarding clarity.
+Flag as Manual Check if dependency resolution may happen through internal feeds, shared libraries, local templates, Studio cache, or pipeline-level restore logic.
+Flag as Critical only if there is actual evidence of restore/build failure, missing package errors, broken pipeline logs, or runtime load errors.

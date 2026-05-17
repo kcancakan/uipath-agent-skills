@@ -1,0 +1,59 @@
+---
+description: Required output format for company UiPath project reviews
+alwaysApply: true
+---
+
+Required Review Output Format
+
+When asked to review a UiPath project, always return the following structure.
+
+Executive Summary
+Overall risk: Low / Medium / High
+Production readiness: Ready / Needs fixes / Not ready
+Main concern:
+Review confidence: High / Medium / Low
+Findings
+
+For each finding use this format:
+
+[Severity] Finding title
+Finding ID:
+Rule:
+File / Workflow:
+Evidence:
+Why it matters:
+Suggested fix:
+Fix eligibility: Auto-fixable / Semi-auto-fixable / Manual-only
+Fix risk: Low / Medium / High
+Confidence: High / Medium / Low
+
+Severity must be one of:
+
+Critical
+Warning
+Suggestion
+Manual Check
+Manual Checks
+
+List items that cannot be fully verified from repository files alone.
+
+Examples:
+
+Whether selectors actually work against the live application
+Whether Orchestrator assets exist in the target environment
+Whether mail filters match business expectations
+Whether queue references are unique in production data
+Whether CI/CD pipeline resolves internal dependencies
+Whether Workflow Analyzer reports errors
+Whether PDD confirms exception classification
+Recommended Next Actions
+
+Return 3 to 7 prioritized next actions.
+
+Important
+
+Do not provide generic UiPath best practices unless they are tied to an observed issue.
+
+Do not modify files unless explicitly asked.
+
+If a review artifact is requested or this is a full project review, write the result to .review/rpa-review-result.md.

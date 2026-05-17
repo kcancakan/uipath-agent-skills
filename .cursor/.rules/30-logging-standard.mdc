@@ -1,0 +1,98 @@
+---
+description: Logging standards for company UiPath projects
+alwaysApply: true
+---
+
+Logging Rules
+Workflow Invocation Logs
+
+Workflow start and end logs should be configured from workflow settings as:
+
+Level: Info
+Only Invocation: Enabled
+Successful Return: Enabled
+
+Flag as Warning if workflow invocation logging is missing or inconsistent.
+
+If this cannot be verified from repository files, place it under Manual Checks.
+
+Workflow Start and End Logging
+
+Workflow start and end logs must be configured from workflow settings, not manually added as Log Message activities.
+
+Expected workflow settings:
+
+Level: Info
+Only Invocation: Enabled
+Successful Return: Enabled
+
+Manual start/end logs should not be used as a substitute for workflow invocation logging.
+
+Flag as Warning if workflow start/end logs are manually added instead of using workflow settings.
+
+Flag as Suggestion if both workflow settings and redundant manual start/end logs exist.
+
+Use Manual Check if this cannot be verified from repository files.
+
+Operational Logging
+
+Important operational steps should have meaningful logs, especially:
+
+Transaction start
+Transaction end
+Queue item retrieval
+Business validation result
+External system/API call
+File read/write
+Mail read/send
+Exception handling
+Retry decision
+Add Queue Item
+Database update
+File move/upload
+Integration response
+
+Flag as Critical if transaction-level traceability is missing.
+
+Flag as Warning if logs exist but are too generic.
+
+Log Context
+
+Logs should include process-relevant context when available:
+
+processName
+transactionId / trxId
+queueItemReference
+businessKey
+environment
+workflowName
+stepName
+exceptionType
+exceptionMessage
+
+Flag as Warning when logs do not provide enough context for support analysis.
+
+Log Message Quality
+
+Avoid vague logs such as:
+
+Started
+Done
+Error occurred
+
+Prefer descriptive logs such as:
+
+Invoice validation started for trxId={trxId}
+Queue item added with reference={reference}
+Business exception thrown because invoice amount is invalid
+Database update completed for invoiceId={invoiceId}
+
+Flag vague logs as Suggestion or Warning depending on impact.
+
+External Logging
+
+If the project uses Splunk, Elastic, or another logging system, verify that key transaction and exception events are traceable.
+
+Do not assume external logging is broken only because full runtime configuration is not visible.
+
+Use Manual Check if log target configuration cannot be verified from repository files.

@@ -1,0 +1,74 @@
+---
+description: UiPath-specific implementation standards for company projects
+alwaysApply: true
+---
+
+UiPath-Specific Rules
+Object Repository
+
+UI selectors should be created and managed through Object Repository where applicable.
+
+Flag as Critical if fragile inline selectors are heavily used in production UI automation and this creates confirmed runtime instability.
+
+Flag as Warning if Object Repository is partially used but inconsistent.
+
+If the project has no meaningful UI automation or selector files, mark this as not applicable or Manual Check.
+
+Mail Reading
+
+When reading mails, the process should read all unread mails.
+
+Do not use a Top filter that may skip unread mails unless there is a documented business reason.
+
+Flag as Critical if Top filter can cause missed production mails.
+
+Flag as Warning if filtering strategy is unclear.
+
+Static UI Selectors
+
+Selectors should be robust and avoid unstable attributes where possible.
+
+Flag as Warning if selectors depend on dynamic IDs, row indexes, temporary text, or unstable UI structure.
+
+Coded / XAML Compatibility
+
+When reviewing coded workflows or XAML workflows, preserve compatibility with UiPath Studio and the project package versions.
+
+Flag as Critical if generated changes may not be supported by the current UiPath project version.
+
+Invoke Code Try-Catch Requirement
+
+Invoke Code activities must contain meaningful try-catch handling inside the code block when the code performs non-trivial logic, external calls, parsing, file operations, DB operations, or risky transformations.
+
+The catch block must not swallow the exception silently.
+
+The catch block must throw or rethrow meaningfully, preserving useful exception context.
+
+Flag as Warning if Invoke Code contains risky logic without try-catch.
+
+Flag as Critical if Invoke Code catches exceptions and suppresses them without throwing, logging, or returning a clear error state.
+
+Good pattern:
+
+Try
+  risky logic
+Catch ex As Exception
+  Throw New Exception("Meaningful context message", ex)
+End Try
+
+Bad pattern:
+
+Try
+  risky logic
+Catch
+End Try
+Workflow Analyzer and CLI Validation
+
+If possible, recommend running:
+
+uip rpa get-errors
+uip rpa analyze
+
+Do not claim analyzer errors exist unless analyzer output is available.
+
+If analyzer/CLI cannot be run, state this under Manual Checks and keep review confidence at Medium or Low.

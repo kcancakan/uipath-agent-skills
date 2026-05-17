@@ -1,0 +1,195 @@
+---
+description: Workflow design and maintainability rules for UiPath projects
+alwaysApply: true
+---
+
+Workflow Rules
+Workflow Naming
+
+Workflow names must be descriptive, clear, and must not contain spaces.
+
+Good examples:
+
+GetInvoiceData.xaml
+ValidateInvoiceAmount.xaml
+AddTransactionToQueue.xaml
+
+Bad examples:
+
+Workflow1.xaml
+Get Data.xaml
+Process.xaml
+
+Flag as Warning for unclear or space-containing workflow names.
+
+Single Responsibility
+
+Each workflow should serve one clear purpose.
+
+Flag as Warning if a workflow performs multiple unrelated responsibilities such as reading config, querying data, validating business rules, and sending mail in the same workflow.
+
+If a framework-level workflow is intentionally orchestration-heavy, do not flag solely based on size. Instead, assess whether the workflow is understandable, testable, and safely changeable.
+
+Workflow Comments
+
+Each workflow should include a short comment explaining its purpose and logic.
+
+Flag as Suggestion if missing.
+
+Flag as Warning if the workflow is complex and has no explanatory comment.
+
+TryCatch Requirement
+
+Each workflow should be wrapped in TryCatch unless it is a simple reusable workflow where exception propagation is intentionally handled by the caller.
+
+Catch blocks must include Throw or equivalent rethrow behavior unless there is a process-specific exceptional case with a clear explanation.
+
+Flag as Critical if exceptions are swallowed silently.
+
+Flag as Warning if TryCatch exists but error handling is inconsistent.
+
+Variables and Arguments Hygiene
+
+Unused variables and arguments should be removed.
+
+Variable names should remain unique across the workflow, even if they are in different inner scopes.
+
+Flag as Warning for unused variables/arguments.
+
+Flag as Warning for duplicate variable names across scopes.
+
+Commented-Out Code
+
+The project should not contain commented-out activities, commented-out code blocks, or dead logic.
+
+Flag as Warning if found.
+
+Flag as Critical if commented-out logic creates confusion around production behavior or can cause incorrect operations.
+
+Reusability
+
+Similar workflows should be designed as reusable workflows with parameters instead of duplicated flow variants.
+
+Bad example:
+
+GetSuccessTickets.xaml
+GetFailedTickets.xaml
+
+Better example:
+
+GetTickets.xaml with in_str_TicketStatus
+
+Flag as Warning if duplicated workflows differ only by simple parameters.
+
+Monolithic Workflow Risk
+
+If a workflow is very large, do not automatically classify it as Critical.
+
+Flag as Warning if the workflow is difficult to test, review, or safely modify.
+
+Flag as Critical only if the size directly hides exception handling, causes duplicate side effects, breaks transaction boundaries, or creates confirmed production risk.
+
+Suspicious Temporary Variables
+
+Detect variables and arguments that are technically referenced but only used in trivial assignments or pass-through operations.
+
+Examples:
+
+variable only assigned but never read meaningfully
+variable only copied into another variable
+variable only initialized and never used in conditions, logs, invokes, returns, or business logic
+argument only passed through layers without transformation or usage
+
+Do not flag variables whose names intentionally indicate temporary/transient usage:
+
+temp
+tmp
+buffer
+cache
+raw
+working
+intermediate
+
+Flag as Suggestion if uncertain.
+
+Flag as Warning if the variable clearly creates maintainability noise.
+
+Examples of suspicious usage:
+
+Assign:
+str_Value = in_str_Name
+
+(no further meaningful usage)
+
+Examples of meaningful usage:
+
+used in If conditions
+used in retries
+logged
+sent to InvokeWorkflowFile
+returned as output
+used in LINQ/query/filter logic
+used in exception handling
+used in queue payload creation
+Variable Scope Optimization
+
+Variables should be declared in the narrowest possible scope.
+
+When reviewing variable scopes:
+
+Identify the variable declaration scope.
+Identify every activity where the variable is referenced.
+Compare the lowest common parent scope of all usages.
+If the variable is only used inside a single nested scope, suggest moving the variable declaration into that scope.
+
+Examples of nested scopes:
+
+If
+Then
+Else
+While
+For Each
+Try
+Catch
+Sequence
+Flowchart branch
+
+Flag as Suggestion if only 1-2 variables are unnecessarily broad-scoped.
+
+Flag as Warning if many variables are declared at workflow level but used only inside isolated child scopes.
+
+Do not flag variables intentionally shared across:
+
+retries
+transaction lifecycle
+exception handling
+multiple branches
+output propagation
+logging correlation
+
+Prefer declaring variables as close as possible to their actual usage scope.
+
+If-Else Usage Standard
+
+When reviewing If/Else activities:
+
+The primary expected logic should be placed in the Then branch.
+The Else branch should not be used as the primary happy-path branch.
+Then should not be empty when Else contains the main logic.
+If the condition is written negatively only to force main logic into Else, suggest reversing the condition.
+
+Flag as Warning if the main business logic is placed in Else while Then is empty or only contains a placeholder.
+
+Flag as Suggestion if reversing the condition would improve readability.
+
+Example of bad practice:
+
+If Not IsValid
+  Then: empty
+  Else: Process invoice
+
+Better:
+
+If IsValid
+  Then: Process invoice
+  Else: Handle invalid case
