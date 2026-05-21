@@ -1,0 +1,150 @@
+---
+description: Workflow edit safety rules for UiPath RPA fix agent
+alwaysApply: true
+---
+
+# Workflow Edit Safety
+
+UiPath workflows contain runtime relationships that may not be obvious from static XAML alone.
+
+The fix agent must preserve:
+- workflow invocation integrity
+- argument mappings
+- variable scope behavior
+- TryCatch boundaries
+- state machine transitions
+- framework lifecycle ownership
+
+Do not assume a local XAML edit is isolated.
+
+---
+
+# Invocation Safety
+
+Before modifying:
+- workflow names
+- argument names
+- argument directions
+- workflow paths
+
+verify all references.
+
+Do not:
+- rename invoked workflows blindly
+- rename arguments blindly
+- change argument direction without full reference validation
+
+If reference integrity cannot be verified:
+- skip the fix
+- document the risk
+
+---
+
+# Variable Safety
+
+Do not:
+- move variables across TryCatch boundaries
+- move variables across StateMachine states
+- narrow variable scope if retry/rethrow behavior may change
+- remove variables unless deterministically unused
+
+Be especially careful with:
+- output variables
+- queue item variables
+- transaction state variables
+- config dictionaries
+- framework-owned variables
+
+---
+
+# Exception Lifecycle Safety
+
+Do not:
+- reorder catches blindly
+- merge catches
+- convert BusinessRuleException to SystemException
+- convert SystemException to BusinessRuleException
+- replace Throw with Rethrow blindly
+
+Preserve:
+- retry semantics
+- queue retry behavior
+- reporting semantics
+- output classification
+
+---
+
+# Queue Safety
+
+Do not modify:
+- queue reference generation
+- queue uniqueness behavior
+- queue retry lifecycle
+- transaction ownership
+- queue status update logic
+
+unless explicitly requested.
+
+Queue-related fixes are high-risk.
+
+---
+
+# Reporting and Output Safety
+
+Do not modify:
+- dt_Output structure
+- output array lifecycle
+- report generation flows
+- output mail flows
+- job status evaluation logic
+
+unless explicitly requested.
+
+These are framework-sensitive areas.
+
+---
+
+# Activity Edit Safety
+
+Safe edits:
+- DisplayName updates
+- Comment cleanup
+- Logging text improvements
+- Placeholder cleanup
+
+Risky edits:
+- activity deletion
+- container restructuring
+- branch inversion
+- retry activity modification
+- Invoke Workflow replacement
+
+Risky edits require additional caution.
+
+---
+
+# State Machine Safety
+
+For REFramework or custom StateMachine projects:
+
+Do not:
+- modify transition logic
+- alter state routing
+- alter retry transitions
+- alter Init/GetTransaction/Process/End lifecycle
+
+unless explicitly requested.
+
+---
+
+# Validation Rule
+
+If workflow behavior may change:
+- request manual runtime validation
+
+especially for:
+- retries
+- queues
+- exception handling
+- reporting
+- external APIs

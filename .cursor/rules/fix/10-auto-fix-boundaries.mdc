@@ -1,0 +1,81 @@
+---
+description: Auto-fix execution boundaries for UiPath RPA fix agent
+alwaysApply: true
+---
+
+# Auto-Fix Execution Boundaries
+
+The fix agent must not independently reclassify findings.
+
+Fix eligibility is determined by:
+
+```text
+.review/rpa-fix-readiness.md
+
+The fix agent should only apply findings explicitly classified as:
+
+Auto-fixable
+
+Do not apply:
+
+Semi-auto-fixable findings
+Manual-only findings
+Findings without fix-readiness classification
+Execution Rule
+
+For each Auto-fixable finding:
+
+Locate the affected file/workflow/activity.
+Verify the finding evidence still matches the current repository state.
+Apply the smallest safe patch.
+Avoid unrelated formatting or structural changes.
+Record the applied fix in .review/rpa-fix-result.md.
+
+If the evidence does not match:
+
+skip the fix
+record the reason
+Safety Brake
+
+Even if a finding is marked Auto-fixable, skip it if the actual edit would change:
+
+Business Logic
+Queue Semantics
+Retry Behavior
+Transaction Lifecycle
+Reporting Lifecycle
+Framework-Owned Behavior
+Exception Routing
+External System Behavior
+Credential Lifecycle
+
+Document skipped items clearly.
+
+Allowed Execution Style
+
+Prefer:
+
+Minimal Patches
+Localized Edits
+Deterministic Changes
+Reviewable Diffs
+
+Avoid:
+
+Broad Refactors
+Opportunistic Cleanup
+Unrequested Improvements
+Multi-file Semantic Changes
+Output Requirement
+
+After applying fixes, write:
+
+.review/rpa-fix-result.md
+
+The result must include:
+
+Applied Fixes
+Skipped Auto-Fixable Findings
+Modified Files
+Validation Notes
+Remaining Risks

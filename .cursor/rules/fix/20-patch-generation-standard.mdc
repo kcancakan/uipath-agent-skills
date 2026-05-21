@@ -1,0 +1,132 @@
+---
+description: Patch generation and remediation output standards for UiPath RPA fix agent
+alwaysApply: true
+---
+
+# Patch Generation Philosophy
+
+Generate:
+- minimal
+- localized
+- reviewable
+- deterministic
+
+patches.
+
+Do not perform:
+- broad rewrites
+- formatting-only rewrites
+- unrelated cleanup
+- opportunistic refactors
+
+Every modification should directly correspond to a reviewed finding.
+
+---
+
+# Minimal Change Rule
+
+Prefer:
+- single-line edits
+- localized activity updates
+- narrow workflow modifications
+
+Avoid:
+- full workflow rewrites
+- activity reorderings
+- variable restructuring
+- formatting normalization across entire files
+
+unless explicitly required by the fix.
+
+---
+
+# Workflow Edit Stability
+
+When editing XAML workflows:
+
+- preserve existing activity order
+- preserve existing container structure
+- preserve existing annotations where possible
+- preserve workflow readability
+- avoid regenerating unrelated XAML sections
+
+Do not modify unrelated activity metadata.
+
+---
+
+# Naming and Formatting Stability
+
+Do not:
+- rename unrelated variables
+- rename unrelated activities
+- normalize unrelated formatting
+- re-indent entire files
+- alphabetically reorder imports or arguments
+
+unless directly related to the finding.
+
+---
+
+# Multi-File Change Rule
+
+Avoid multi-file fixes unless:
+- all affected references are verified
+- the relationship is deterministic
+- the fix cannot be safely localized
+
+If uncertainty exists:
+- skip the fix
+- document the dependency risk
+
+---
+
+# Fix Traceability
+
+Every applied patch must be traceable to:
+- Finding ID
+- File
+- Workflow
+- Specific evidence
+
+Do not apply silent improvements.
+
+---
+
+# Required Fix Reporting
+
+After remediation, `.review/rpa-fix-result.md` must include:
+
+## Applied Fixes
+- Finding ID
+- Modified File
+- Applied Change
+- Why Safe
+
+## Skipped Fixes
+- Finding ID
+- Skip Reason
+- Detected Risk
+
+## Validation Notes
+- Runtime validation needs
+- Manual verification needs
+- Potential regression areas
+
+## Modified Files Summary
+- Full file list
+
+---
+
+# Validation Philosophy
+
+Fix generation is NOT proof of runtime correctness.
+
+If runtime behavior may be affected:
+- explicitly request manual validation
+
+especially for:
+- queue behavior
+- retry behavior
+- reporting behavior
+- external API behavior
+- exception routing
