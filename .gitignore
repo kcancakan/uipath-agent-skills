@@ -1,0 +1,70 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+Icon?
+
+# Cursor / IDE
+.cursor/index/
+.cursor/cache/
+.cursor/history/
+.cursor/tmp/
+
+# Local analysis artifacts
+.local/
+.analysis/
+
+# UiPath
+.project/
+.nuget/
+packages/
+Screenshots/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# Build / Output
+bin/
+obj/
+dist/
+build/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+
+# Coverage / Test
+coverage/
+test-results/
+
+# Archive files
+*.zip
+*.rar
+*.7z
+
+# Generated review artifacts
+.review/
+
+# UiPath local analyzer/runtime artifacts
+*.local
+*.analysis

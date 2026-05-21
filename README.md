@@ -1,171 +1,250 @@
 # UiPath Agent Skills
 
-> Operationally-aware AI review skills for UiPath RPA projects.
+Operationally-aware AI review skills for UiPath RPA projects.
 
 This repository experiments with adding:
-- review rules
-- operational knowledge
-- framework semantics
-- supportability heuristics
-- structured review artifacts
+
+- Review Rules
+- Operational Knowledge
+- Framework Semantics
+- Supportability Heuristics
+- Structured Review Artifacts
 
 on top of AI-assisted code review workflows.
 
-**The primary goal is not generating more findings.**  
-**The primary goal is generating more operationally meaningful findings for enterprise-grade UiPath automations.**
+The primary goal is not generating more findings.
+
+The primary goal is generating more operationally meaningful findings for enterprise-grade UiPath automations.
 
 ---
 
-## Motivation
+# Motivation
 
 Most frontier AI models are already quite strong at:
-- generic software engineering review
-- static analysis
-- naming consistency
-- configuration/security findings
-- dependency/package checks
+
+- Generic Software Engineering Review
+- Static Analysis
+- Naming Consistency
+- Configuration/Security Findings
+- Dependency/Package Checks
 
 However, real-world RPA projects usually contain additional operational complexity such as:
-- transaction lifecycle management
-- queue orchestration
-- reporting/output contracts
-- framework sequencing
-- retry/idempotency concerns
-- operational logging
-- supportability expectations
-- runtime-specific behavior
 
-Many of these issues are technically valid flows but operationally problematic. This repository experiments with whether an additional “skill layer” can improve review quality beyond generic coding-model behavior.
+- Transaction Lifecycle Management
+- Queue Orchestration
+- Reporting/Output Contracts
+- Framework Sequencing
+- Retry/Idempotency Concerns
+- Operational Logging
+- Supportability Expectations
+- Runtime-Specific Behavior
 
----
+Many of these issues are technically valid flows but operationally problematic.
 
-## Current Focus Areas
-
-The current rules and prompts focus mainly on:
-- UiPath REFramework/Rocky-style processes
-- transactional automation patterns
-- queue handling
-- logging quality
-- exception handling
-- supportability
-- maintainability
-- CI/CD hygiene
-- config/security handling
-- operational risk detection
-- review artifact generation
-- fix-agent compatibility
+This repository experiments with whether an additional “skill layer” can improve review quality beyond generic coding-model behavior.
 
 ---
 
-## Repository Structure
+# Current Primary Focus Areas
+
+- Runtime-Aware Review
+- Framework-Aware Interpretation
+- Operational Supportability Reasoning
+- False-Positive Reduction
+- Guarded Remediation Safety
+- UiPath REFramework/Rocky-Style Processes
+- Transactional Automation Patterns
+- Queue Handling
+- Logging Quality
+- Exception Handling
+- Supportability
+- Maintainability
+- CI/CD Hygiene
+- Config/Security Handling
+- Operational Risk Detection
+- Review Artifact Generation
+- Fix-Agent Compatibility
+
+---
+
+# Repository Structure
 
 ```text
-.
-├── .cursor/
-│   ├── rules/       # Modular review rules (naming, logging, exceptions, config, etc.)
-│   └── prompts/     # Reusable review prompts (full review, focused review, fix-readiness)
-├── .review/         # Generated review artifacts (e.g., rpa-review-result.md)
-├── examples/        # Sample review outputs and example findings
-└── knowledge/       # Experimental operational knowledge (historical patterns, heuristics)
+.cursor/
+├── knowledge/
+│   ├── development-standards/
+│   ├── framework-behaviours/
+│   └── uipath-runtime/
+│
+├── prompts/
+│   ├── fix/
+│   └── review/
+│
+└── rules/
+    ├── fix/
+    └── review/
+
+experiments/
+sample-result/
 ```
-
-### Detailed Breakdown
-
-- **`.cursor/rules`**: Contains modular review rules such as naming standards, workflow standards, logging rules, exception/queue handling, config/security checks, evidence-based severity rules, review artifact formatting.
-- **`.cursor/prompts`**: Contains reusable review prompts such as full project review, focused review, and fix-readiness review.
-- **`.review`**: Generated review artifacts are written here. Example: `.review/rpa-review-result.md`.
-- **`knowledge`**: Experimental operational knowledge layer intended for historical failure patterns, runtime semantics, supportability heuristics, operational review examples, and framework-specific contextual knowledge.
-- **`examples`**: Sample review outputs and example findings.
 
 ---
 
-## Example Review Philosophy
+# Detailed Breakdown
+
+`.cursor/knowledge`
+
+Contains runtime semantics, framework contracts, operational caveats, development standards, and false-positive prevention guidance for UiPath projects.
+
+`.cursor/rules`
+
+Contains modular review/fix behavioral rules such as logging standards, exception handling expectations, queue/retry safety, naming conventions, severity guidance, and operational review boundaries.
+
+`.cursor/prompts`
+
+Contains reusable operational review/fix prompts such as full review, focused review, fix-readiness analysis, and guarded auto-fix flows.
+
+`sample-result`
+
+Contains anonymized real-world review outputs demonstrating operational reasoning, framework-aware findings, and runtime-oriented analysis quality.
+
+`experiments`
+
+Contains benchmark-style experiment results comparing different models, knowledge-layer impact, and operational review behavior evolution.
+
+---
+
+# Example Review Philosophy
 
 The repository intentionally separates findings into two categories:
 
-### 1. Generic SWE findings
-*Examples:* hardcoded credentials, naming inconsistencies, dependency hygiene, weak logging, static configuration risks.
+## 1. Generic SWE Findings
 
-### 2. Operational RPA findings
-*Examples:* output/report corruption risks, retry/idempotency side effects, framework lifecycle issues, transaction visibility gaps, contextual maintainability problems, supportability risks, queue/reporting edge cases.
+Examples:
 
-### Important Observation
+- Hardcoded Credentials
+- Naming Inconsistencies
+- Dependency Hygiene
+- Weak Logging
+- Static Configuration Risks
 
-One of the main observations during experimentation:
-Frontier models are usually good at syntax review, static patterns, and generic SWE best practices. But they still struggle with:
-- UiPath runtime semantics
-- operational consequences
-- framework behavior
-- historical production failure patterns
-- support-engineer style reasoning
+## 2. Operational RPA Findings
 
-This repository experiments with whether structured rules, operational knowledge, review contracts, and contextual heuristics can improve AI-assisted review quality.
+Examples:
+
+- Output/Report Corruption Risks
+- Retry/Idempotency Side Effects
+- Framework Lifecycle Issues
+- Transaction Visibility Gaps
+- Contextual Maintainability Problems
+- Supportability Risks
+- Queue/Reporting Edge Cases
 
 ---
 
-## What This Repository Is NOT
+# Important Observation
 
-This repository is **NOT**:
-- an official UiPath project
-- a replacement for human code review
-- a guarantee of production safety
-- a static analyzer replacement
-- a production-ready governance platform
+One of the main observations during experimentation:
+
+Frontier models are usually good at:
+
+- Syntax Review
+- Static Patterns
+- Generic SWE Best Practices
+
+But they still struggle with:
+
+- UiPath Runtime Semantics
+- Operational Consequences
+- Framework Behavior
+- Historical Production Failure Patterns
+- Support-Engineer-Style Reasoning
+
+This repository experiments with whether structured rules, operational knowledge, review contracts, and contextual heuristics can improve AI-assisted review quality.
+
+One of the most interesting observations was:
+
+The major improvement did not come from increasing prompt size.
+
+It came from changing how the models interpreted the same workflow after runtime semantics and framework knowledge were introduced.
+
+---
+
+# What This Repository Is NOT
+
+This repository is NOT:
+
+- An Official UiPath Project
+- A Replacement For Human Code Review
+- A Guarantee Of Production Safety
+- A Static Analyzer Replacement
+- A Production-Ready Governance Platform
 
 The repository is currently experimental and intended for learning/research purposes around operationally-aware AI review workflows.
 
 ---
 
-## Local / On-Prem Possibility
+# Local / On-Prem Possibility
 
-The repository is intentionally designed so that the review flow does not have to depend only on cloud-hosted models. Possible setups include:
-- Cursor + cloud LLMs
-- Cursor + local models
-- Ollama-based local review pipelines
-- LM Studio-based local review flows
-- enterprise-hosted model gateways
+The repository is intentionally designed so that the review flow does not have to depend only on cloud-hosted models.
+
+Possible setups include:
+
+- Cursor + Cloud LLMs
+- Cursor + Local Models
+- Ollama-Based Local Review Pipelines
+- LM Studio-Based Local Review Flows
+- Enterprise-Hosted Model Gateways
 
 The long-term idea is making the review layer portable across different providers and environments.
 
 ---
 
-## Future Ideas
+# Future Ideas
 
 Potential future directions:
-- operational knowledge retrieval
-- runtime-aware review context
-- structured review datasets
-- fix-agent workflows
-- review-to-patch generation
-- hybrid static-analysis + LLM review
-- local/on-prem review orchestration
-- RPA-specific review benchmarking
+
+- Operational Knowledge Retrieval
+- Runtime-Aware Review Context
+- Structured Review Datasets
+- Fix-Agent Workflows
+- Review-To-Patch Generation
+- Hybrid Static-Analysis + LLM Review
+- Local/On-Prem Review Orchestration
+- RPA-Specific Review Benchmarking
+- Guarded Auto-Fix Flows
+- Re-Review Validation Loops
+- Runtime-Safe Remediation
+- Operational Regression Prevention
+- Framework-Aware Fix Strategies
 
 ---
 
-## Disclaimer
+# Disclaimer
 
-⚠️ **The findings produced by AI-assisted review systems should always be validated by experienced engineers.**
+⚠️ The findings produced by AI-assisted review systems should always be validated by experienced engineers.
 
 Especially for:
-- retry semantics
-- business exception handling
-- queue lifecycle behavior
-- runtime-specific behavior
-- infrastructure integrations
-- production support implications
+
+- Retry Semantics
+- Business Exception Handling
+- Queue Lifecycle Behavior
+- Runtime-Specific Behavior
+- Infrastructure Integrations
+- Production Support Implications
 
 Human operational review remains critical.
 
 ---
 
-## Status
+# Status
 
-**Experimental / early-stage.**
+Experimental / research-oriented.
 
 Currently evolving through:
-- real project reviews
-- multi-model comparisons
-- operational finding analysis
-- iterative rule improvements
-- contextual knowledge experiments
+
+- Real Project Reviews
+- Multi-Model Comparisons
+- Operational Finding Analysis
+- Iterative Rule Improvements
+- Contextual Knowledge Experiments
